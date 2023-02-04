@@ -1,2 +1,3 @@
-# Path-Planning-ID-DFS-and-A-
+# Path-Planning
+## Algorithms: ID-DFS and A*
 In-Progress
