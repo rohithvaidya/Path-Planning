@@ -1,15 +1,55 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include<stack>
 
 using namespace std;
 
+int adj_matrix[100][100];
+
+void dfs_with_limit(int start, int goal, vector<bool>& visited, int limit)
+{
+    if(limit<=0){
+        return;
+    }
+
+    // Print the current node
+    cout << start << " ";
+
+    // Set current node as visited
+    visited[start] = true;
+
+    // For every node of the graph
+    for (int i = 0; i < 100; i++) {
+
+        // If some node is adjacent to the current node
+        // and it has not already been visited
+        if (adj_matrix[start][i] == 1 && (!visited[i])) {
+            dfs_with_limit(i, goal, visited, limit-1);
+        }
+    }
+}
+
+
+
+void id_dfs(int start, int goal, vector<bool>& visited, int depth){
+    for (int i = 1; i <= depth; i++){
+        for(int j=0; j<100; j++){
+            visited[j] = false;
+        }
+        dfs_with_limit(start, goal, visited, i);
+        cout<<endl;
+    }
+
+}
 int main()
 {
 
     int grid_length = 10; // No of elements will be NxN
     int matrix_size = grid_length*grid_length;
     int obstacles = (10*grid_length)/100;
+
+    vector<bool> visited(100, false);
     //int obstacles = 1;
 
     struct Node{
@@ -19,7 +59,7 @@ int main()
     };
 
     vector<vector<Node>> grid;
-    int adj_matrix[matrix_size][matrix_size];
+
 
     vector<Node> temp;
     int ctr = 0;
@@ -129,8 +169,6 @@ for(int i=0;i<grid_length;i++){
 
     }
 
-
-
 //Print Adjacency Matrix
 cout<<"The Adjacency Matrix"<<endl;
 for(int k=0; k<matrix_size; k++){
@@ -140,6 +178,12 @@ for(int k=0; k<matrix_size; k++){
     cout<<endl;
 }
 
+cout<<endl;
+
+//Perform DFS
+//dfs_with_limit(0, visited, 3);
+
+id_dfs(0, 99, visited, 10);
 
 return 0;
 
