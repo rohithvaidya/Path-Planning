@@ -7,6 +7,95 @@ using namespace std;
 
 int adj_matrix[100][100];
 
+struct Node{
+    int heur=0;
+    int total_cost=0;
+    int start_curr_dist = 0;
+
+    int id;
+    int status;
+    };
+    
+vector<vector<Node>> grid;
+
+void a_star(int goal){
+    vector<Node> open_list;
+    vector<Node> closed_list;
+
+
+
+    open_list.push_back(grid[0][0]);
+    struct Node curr_node = grid[0][0];
+    struct Node child_node;
+
+    int curr_pos=0;
+
+
+    while(!open_list.empty()){
+
+        curr_node = open_list[0];
+        curr_pos = 0;
+
+        for(int i=0; i< open_list.size(); i++){
+            if(open_list[i].total_cost <= curr_node.total_cost){
+                curr_node = open_list[i];
+                curr_pos = i;
+            }
+        }
+        closed_list.push_back(curr_node);
+        open_list.erase(open_list.begin()+curr_pos);
+
+        if(curr_node.id == goal){
+            cout<<"Goal Found"<<endl;
+            cout<<"Cost "<<curr_node.total_cost;
+            cout<<endl;
+            cout<<"Distance from start "<<curr_node.start_curr_dist;
+            return;
+        }
+
+
+        int no_ch = 0;
+        for(int i=0; i<100; i++){
+            if(adj_matrix[curr_node.id][i] == 1){
+                for(auto j:closed_list){
+                    if(i == j.id){
+                        continue;
+                    }
+                }
+
+                //get Child
+                for(int k=0; k<10; k++){
+                    for(int l=0; l<10; l++){
+
+                        if(grid[k][l].id == i)
+                            child_node = grid[k][l];
+
+                    }
+                }
+
+                child_node.start_curr_dist = curr_node.start_curr_dist + 1;
+                child_node.heur = 14; //To be changed
+                child_node.total_cost = child_node.start_curr_dist + child_node.heur;
+
+                for(auto k:open_list){
+                    if(child_node.id == k.id){
+                        if(child_node.start_curr_dist > k.start_curr_dist){
+                            continue;
+                        }
+                    }
+                }
+
+                open_list.push_back(child_node);
+                no_ch+=1;
+
+            }
+        }
+
+
+    }
+
+}
+
 void dfs_with_limit(int start, int goal, vector<bool>& visited, int limit)
 {
     if(limit<=0){
@@ -52,13 +141,7 @@ int main()
     vector<bool> visited(100, false);
     //int obstacles = 1;
 
-    struct Node{
-    //int heur;
-    int id;
-    int status;
-    };
 
-    vector<vector<Node>> grid;
 
 
     vector<Node> temp;
@@ -183,7 +266,9 @@ cout<<endl;
 //Perform DFS
 //dfs_with_limit(0, visited, 3);
 
-id_dfs(0, 99, visited, 10);
+//id_dfs(0, 99, visited, 10);
+
+a_star(52);
 
 return 0;
 
