@@ -7,11 +7,13 @@ top.geometry("1000x1000")
 rows = 10
 cols = 10
 
-ob = [41, 67,34,0,69,24,78,58,62,64]
+ob = [41,67,34,0,69,24,78,58,62,64]
 
 f=open("f.txt", "r")
 path=[]
 for i in f.readlines():
+    if(i=="\n"):
+        continue
     path.append(int(i))
 
 print(path)

@@ -6,6 +6,7 @@
 #include <fstream>
 #define GRID_SIZE 10
 #define MAT_SIZE 100
+#define OBST 10
 
 using namespace std;
 
@@ -20,7 +21,7 @@ struct Node{
     int x;
     int y;
 
-    struct Node* parent;
+    int p_id;
 
     int id;
     int status;
@@ -48,7 +49,7 @@ void a_star(){
     start_node.g = 0;
     start_node.f = 15;
     start_node.x = 0;
-    start_node.y = 0;
+    start_node.y = 1;
 
     open_list.push_back(start_node);
 
@@ -72,17 +73,29 @@ void a_star(){
     open_list.erase(open_list.begin()+q_pos);
 
 
+    struct Node te;
+    int sig = 1;
+
     for(int i=0;i<MAT_SIZE;i++){
         if(adj_matrix[q.id][i]==1){
             for(int j=0;j<GRID_SIZE;j++){
                 for(int k=0;k<GRID_SIZE;k++){
                     if(grid[j][k].id == i){
-                        grid[j][k].x = j;
-                        grid[j][k].y = k;
-                        grid[j][k].parent = &q;
-                        successors.push_back(grid[j][k]);
+                        for(auto w:closed_list){
+                            if(grid[j][k].id == w.id) sig = 0;
+                        }
+                        if(sig){
+                            te = grid[j][k];
+                        te.x = j;
+                        te.y = k;
+                        te.p_id = q.id;
+                        successors.push_back(te);
+                        }
+
                     }
                 }
+                sig=1;
+
 
             }
         }
@@ -93,21 +106,33 @@ void a_star(){
             continue;
         }
 
-        for(auto l:closed_list){
-            if((l.id == i.id)){
-                continue;
-            }
-        }
 
         if(i.id == goal_node.id){
                 cout<<"Goal Reached "<<i.id;
                 //Compute for goal node
+                ofstream myfile;
+                myfile.open ("E:/Course work/Foundations of AI/Path-Planning/f.txt");
 
-                for(int p=0;p<q.g;p++){
-                    cout<<q.parent<<" ";
-                    q = *q.parent;
+
+                cout<<endl;
+                Node fin;
+                for(auto y:closed_list){
+                    if(q.id == y.id){
+                        fin = y;
+                    }
+                }
+
+                for(int w=q.g;w>0;w--){
+                    cout<<fin.id<<" ";
+                    myfile<<fin.id<<endl;
+                    for(auto e:closed_list){
+                        if(fin.p_id == e.id){
+                            fin = e;
+                        }
+                    }
 
                 }
+                myfile.close();
                 i.g = q.g + 1;
             i.h = abs(goal_x - i.x) + abs(goal_y-i.y); //Manhattan Distance
             i.f = i.g + i.h;
@@ -118,8 +143,6 @@ void a_star(){
             cout<<"Total Cost "<<i.f;
             cout<<endl;
 
-
-            cout<<closed_list.size();
             return;
         }
 
@@ -129,6 +152,12 @@ void a_star(){
             i.h = abs(goal_x - i.x) + abs(goal_y-i.y);
             i.f = i.g + i.h;
 
+        }
+
+        for(auto l:closed_list){
+            if((l.id == i.id)){
+                continue;
+            }
         }
 
         for(auto k:open_list){
@@ -207,7 +236,7 @@ void id_dfs(int start, int goal, vector<bool>& visited, int depth){
 int main()
 {
     //int obstacles = (10*grid_length)/100;
-    int obstacles = 10;
+    int obstacles = OBST;
 
     vector<bool> visited(MAT_SIZE, false);
     vector<int> random_nos;
@@ -331,9 +360,9 @@ cout<<endl;
 
 //Perform DFS
 
-//dfs_with_limit(1, 88, visited, 19);
+//dfs_with_limit(1, 79, visited, 19);
 
-id_dfs(1, 99, visited, 20);
+/*id_dfs(1, 88, visited, 18);
 cout<<dfs_path.size();
 cout<<endl;
 
@@ -362,15 +391,16 @@ for(int i=0;i<GRID_SIZE;i++){
     }
     cout<<endl;
 }
-
+*/
 //id_dfs(20, 32, visited, 10);
-//a_star();
-ofstream myfile;
+a_star();
+
+/*ofstream myfile;
 myfile.open ("E:/Course work/Foundations of AI/Path-Planning/f.txt");
 for(auto v:dfs_path){
     myfile<<v<<endl;
 }
-myfile.close();
+myfile.close();*/
 
 
 return 0;
