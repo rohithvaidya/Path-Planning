@@ -6,7 +6,7 @@
 #include <fstream>
 #define GRID_SIZE 10
 #define MAT_SIZE 100
-#define OBST 10
+#define OBST 100
 
 using namespace std;
 
@@ -37,17 +37,17 @@ void a_star(){
     vector<Node> closed_list;
     vector<Node> successors;
 
-    struct Node goal_node = grid[8][8];
+    struct Node goal_node = grid[10][11];
     goal_node.h = 0;
-    goal_node.x = 8;
-    goal_node.y = 8;
-    int goal_x = 8;
-    int goal_y = 8;
+    goal_node.x = 10;
+    goal_node.y = 11;
+    int goal_x = 10;
+    int goal_y = 11;
 
     struct Node start_node = grid[0][1];
-    start_node.h = 15;
+    start_node.h = 20;
     start_node.g = 0;
-    start_node.f = 15;
+    start_node.f = 20;
     start_node.x = 0;
     start_node.y = 1;
 
@@ -71,6 +71,7 @@ void a_star(){
 
     closed_list.push_back(q);
     open_list.erase(open_list.begin()+q_pos);
+    //open_list.clear();
 
 
     struct Node te;
@@ -105,13 +106,11 @@ void a_star(){
         if(i.id==q.id){
             continue;
         }
-
-
         if(i.id == goal_node.id){
                 cout<<"Goal Reached "<<i.id;
                 //Compute for goal node
                 ofstream myfile;
-                myfile.open ("E:/Course work/Foundations of AI/Path-Planning/f.txt");
+                myfile.open ("f.txt");
 
 
                 cout<<endl;
@@ -360,16 +359,16 @@ cout<<endl;
 
 //Perform DFS
 
-//dfs_with_limit(1, 79, visited, 19);
+//dfs_with_limit(1, 92, visited, 300);
 
-/*id_dfs(1, 88, visited, 18);
-cout<<dfs_path.size();
-cout<<endl;
+//id_dfs(1, 82, visited, 18);
+//cout<<dfs_path.size();
+//cout<<endl;
 
 
 int temp1 = 0;
 
-for(int i=0;i<GRID_SIZE;i++){
+/*for(int i=0;i<GRID_SIZE;i++){
     for(int j=0;j<GRID_SIZE;j++){
         if(grid[i][j].status == 0){
             cout<<"|";
@@ -390,13 +389,13 @@ for(int i=0;i<GRID_SIZE;i++){
 
     }
     cout<<endl;
-}
-*/
+}*/
+
 //id_dfs(20, 32, visited, 10);
 a_star();
 
 /*ofstream myfile;
-myfile.open ("E:/Course work/Foundations of AI/Path-Planning/f.txt");
+myfile.open ("f.txt");
 for(auto v:dfs_path){
     myfile<<v<<endl;
 }
